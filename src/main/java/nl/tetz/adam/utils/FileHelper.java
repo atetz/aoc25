@@ -8,18 +8,27 @@ import java.util.List;
 
 
 public class FileHelper {
-    private static final Path INPUT_PATH = Path.of("src/main/resources/puzzleInput");
 
-    public static List<String> readLines(String fileName) {
+    private final Path inputPath;
+
+    public FileHelper() {
+        this.inputPath = Path.of("src/main/resources/puzzleInput");
+    }
+
+    public FileHelper(String inputPath) {
+        this.inputPath = Path.of(inputPath);
+    }
+
+    public List<String> readLines(String fileName) {
         try {
-            return Files.readAllLines(INPUT_PATH.resolve(fileName));
+            return Files.readAllLines(this.inputPath.resolve(fileName));
         } catch (IOException e) {
                 throw new RuntimeException("Failed to read file: " + fileName, e);
             }
         }
 
 
-    public static List<int[]> readLinesAsListOfIntArray(String fileName, String delimiter) {
+    public List<int[]> readLinesAsListOfIntArray(String fileName, String delimiter) {
         return readLines(fileName).stream()
                 .map(line -> Arrays.stream(line.split(delimiter))
                         .mapToInt(Integer::parseInt)
@@ -28,7 +37,7 @@ public class FileHelper {
 
     }
 
-    public static String[][] readLinesAs2DArray(String fileName) {
+    public String[][] readLinesAs2DArray(String fileName) {
         return readLines(fileName).stream().map(s -> s.split(""))
                 .toArray(String[][]::new);
     }
