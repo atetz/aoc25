@@ -113,3 +113,4 @@ replay_pid*
 *.DS_Store
 
 /src/main/resources/puzzleInput/
+/target/
