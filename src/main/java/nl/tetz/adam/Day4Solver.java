@@ -20,11 +20,13 @@ public class Day4Solver {
     static void main(String[] args) {
 
         FileHelper fileHelper = new FileHelper();
-        String[][] rollsMap = fileHelper.readLinesAs2DArray("day4.sample.txt");
+        String[][] rollsMap = fileHelper.readLinesAs2DArray("day4.txt");
 
         Day4Solver solver = new Day4Solver(rollsMap);
 
         System.out.printf("part one: %d \n", solver.solvePartOne());
+        System.out.printf("part two: %d \n", solver.solvePartTwo());
+
     }
 
     HashMap<Coord, String> convertGridToMap(String[][] grid) {
@@ -88,6 +90,28 @@ public class Day4Solver {
         }
 
         return accessibleRolls;
+    }
+
+    public int solvePartTwo() {
+        int removedRolls = 0;
+        boolean removing = true;
+        while (removing) {
+            int removedRollsThisRound = 0;
+            for (int y = 0; y < this.rows; y++) {
+                for (int x = 0; x < this.cols; x++) {
+                    Coord coord = new Coord(x, y);
+                    if (isRoll(coord) && checkRollAccessibility(coord)) {
+                        removedRolls++;
+                        removedRollsThisRound++;
+                        this.rollMap.put(coord, ".");
+                    }
+                }
+            }
+            if (removedRollsThisRound == 0) {
+                removing = false;
+            }
+        }
+        return removedRolls;
     }
 
     public record Coord(int x, int y) {
