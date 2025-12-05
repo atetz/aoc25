@@ -58,7 +58,7 @@ public class Day3Solver {
             int startPos = 0;
             StringBuilder result = new StringBuilder();
 
-            // for a decreasing sliding window, get highest value
+            // for an increasing sliding window, get highest value until batteriesWanted
 
             for (int windowLimit = batteriesWanted - 1; windowLimit > -1; windowLimit--) {
                 int[] maxValueAndIndex = findMaxValueAndIndex(digitArray, windowLimit, startPos);
