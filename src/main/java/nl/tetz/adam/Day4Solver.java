@@ -2,21 +2,50 @@ package nl.tetz.adam;
 
 import nl.tetz.adam.utils.FileHelper;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 public class Day4Solver {
 
-    final static String PUZZLE_INPUT = "day4.txt";
-    final static String PUZZLE_INPUT_SAMPLE = "day4.sample.txt";
+    HashMap<Coord, String> rollMap = new HashMap<>();
+    int rows;
+    int cols;
 
-    boolean checkBounds(int x, int y, int numCols, int numRows) {
-        return x >= 0 && x < numCols && y >= 0 && y < numRows;
+    Day4Solver(String[][] mapArray) {
+        this.cols = mapArray[0].length;
+        this.rows = mapArray.length;
+        this.rollMap = convertGridToMap(mapArray);
     }
 
-    boolean checkRollAccessibility(int x, int y, String[][] rollsMap) {
+    static void main(String[] args) {
 
-        int numRows = rollsMap.length;
-        int numCols = rollsMap[0].length;
+        FileHelper fileHelper = new FileHelper();
+        String[][] rollsMap = fileHelper.readLinesAs2DArray("day4.sample.txt");
+
+        Day4Solver solver = new Day4Solver(rollsMap);
+
+        System.out.printf("part one: %d \n", solver.solvePartOne());
+    }
+
+    HashMap<Coord, String> convertGridToMap(String[][] grid) {
+        HashMap<Coord, String> map = new HashMap<>();
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < this.cols; j++) {
+                map.put(new Coord(i, j), grid[i][j]);
+            }
+        }
+        return map;
+    }
+
+    boolean checkBounds(int x, int y) {
+        return x >= 0 && x < this.cols && y >= 0 && y < this.rows;
+    }
+
+    boolean isRoll(Coord coord) {
+        return Objects.equals(this.rollMap.get(coord), "@");
+    }
+
+    boolean checkRollAccessibility(Coord coord) {
 
         // left up, right down, right up, left down, left, right, up, down
         int[][] moves = {{-1, -1}, {1, 1}, {1, -1}, {-1, 1}, {-1, 0}, {1, 0}, {0, -1}, {0, 1}};
@@ -25,14 +54,16 @@ public class Day4Solver {
         int adjacentRolls = 0;
 
         for (int[] move : moves) {
-            int nextX = x + move[0];
-            int nextY = y + move[1];
 
-            if (!checkBounds(nextX, nextY, numCols, numRows)) {
+            int nextX = coord.x + move[0];
+            int nextY = coord.y + move[1];
+            Coord newCoord = new Coord(nextX, nextY);
+
+            if (!checkBounds(nextX, nextY)) {
                 continue;
             }
 
-            if (Objects.equals(rollsMap[nextY][nextX], "@")) {
+            if (this.isRoll(newCoord)) {
                 adjacentRolls++;
             }
 
@@ -45,13 +76,12 @@ public class Day4Solver {
 
     }
 
-    public int solvePartOne(String[][] rollsMap) {
-        int numRows = rollsMap.length;
-        int numCols = rollsMap[0].length;
+    public int solvePartOne() {
         int accessibleRolls = 0;
-        for (int y = 0; y < numRows; y++) {
-            for (int x = 0; x < numCols; x++) {
-                if (Objects.equals(rollsMap[y][x], "@") && checkRollAccessibility(x, y, rollsMap)) {
+        for (int y = 0; y < this.rows; y++) {
+            for (int x = 0; x < this.cols; x++) {
+                Coord coord = new Coord(x, y);
+                if (isRoll(coord) && checkRollAccessibility(coord)) {
                     accessibleRolls++;
                 }
             }
@@ -60,19 +90,13 @@ public class Day4Solver {
         return accessibleRolls;
     }
 
-    void main() {
+    public record Coord(int x, int y) {
 
-        FileHelper fileHelper = new FileHelper();
-        String[][] rollsMap = fileHelper.readLinesAs2DArray(PUZZLE_INPUT);
-
-        System.out.printf("part one: %d", solvePartOne(rollsMap));
-
-//        assert checkBounds(0, 0, numCols, numRows);
-//        assert !checkBounds(-1, 0, numCols, numRows);
-//        assert !checkBounds(12, 0, numCols, numRows);
-//        assert !checkBounds(0, -1, numCols, numRows);
-//        assert checkBounds(1, 0, numCols, numRows);
-//        assert !checkBounds(10, 11, numCols, numRows);
+        @Override
+        public boolean equals(Object o) {
+            if (!(o instanceof Coord(int x1, int y1))) return false;
+            return x == x1 && y == y1;
+        }
 
     }
 }
