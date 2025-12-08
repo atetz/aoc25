@@ -20,7 +20,7 @@ public class Day4Solver {
     static void main(String[] args) {
 
         FileHelper fileHelper = new FileHelper();
-        String[][] rollsMap = fileHelper.readLinesAs2DArray("day4.txt");
+        String[][] rollsMap = fileHelper.readLinesAsGrid("day4.txt");
 
         Day4Solver solver = new Day4Solver(rollsMap);
 

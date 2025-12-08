@@ -23,9 +23,9 @@ public class FileHelper {
         try {
             return Files.readAllLines(this.inputPath.resolve(fileName));
         } catch (IOException e) {
-                throw new RuntimeException("Failed to read file: " + fileName, e);
-            }
+            throw new RuntimeException("Failed to read file: " + fileName, e);
         }
+    }
 
 
     public List<int[]> readLinesAsListOfIntArray(String fileName, String delimiter) {
@@ -37,7 +37,7 @@ public class FileHelper {
 
     }
 
-    public String[][] readLinesAs2DArray(String fileName) {
+    public String[][] readLinesAsGrid(String fileName) {
         return readLines(fileName).stream().map(s -> s.split(""))
                 .toArray(String[][]::new);
     }

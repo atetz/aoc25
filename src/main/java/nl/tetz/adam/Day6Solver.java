@@ -22,7 +22,7 @@ public class Day6Solver {
         System.out.printf("Part one: %d \n", partOne(lines));
 
 
-        String[][] linesGrid = fileHelper.readLinesAs2DArray(file);
+        String[][] linesGrid = fileHelper.readLinesAsGrid(file);
         System.out.printf("Part two: %d \n", partTwo(linesGrid));
 
     }
